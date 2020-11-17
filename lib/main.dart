@@ -51,13 +51,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   static const double _ConversionRate = 4.87;
+  static final RegExp _FormatRegexp = RegExp(r'^\d+(\.\d*)?$');
+
+  String _currencyString;
   double _currency;
 
-  void _updateCurrency(String currencyString) {
+  void _updateCurrencyString(String currencyString) {
+    _currencyString = currencyString;
+    // setState(() {
+    //   _currency = double.parse(currencyString) * _ConversionRate;
+    // });
+  }
+
+  void _updateCurrency() {
     setState(() {
-      _currency = double.parse(currencyString) * _ConversionRate;
+      _currency = double.parse(_currencyString) * _ConversionRate;
     });
   }
 
@@ -71,20 +80,24 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[
-          Image.network('https://www.romaniajournal.ro/wp-content/uploads/2016/01/bani1.jpg'),
+          Image.network(
+              'https://www.romaniajournal.ro/wp-content/uploads/2016/01/bani1.jpg'),
           TextField(
             keyboardType: const TextInputType.numberWithOptions(signed: true),
             maxLength: 20,
             decoration: const InputDecoration(
-              prefixText: 'EUR',
-            ),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter(RegExp(r'(\d)+\.(\d)+'), allow: true),
-            ],
-            onChanged: _updateCurrency,
+                prefixText: 'EUR',
+                contentPadding: EdgeInsets.symmetric(horizontal: 10)),
+            onChanged: _updateCurrencyString,
           ),
-          Text('$_currency RON'),
-          // TODO(cosmin-sterian): Button
+          if (_currency != null) Text('$_currency RON'),
+          TextButton(
+            child: const Text('Convert'),
+            onPressed: () {
+              // TODO(cosmin-sterian): if text field valid
+              _updateCurrency();
+            },
+          ),
         ],
       ),
     );
