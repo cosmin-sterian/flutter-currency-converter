@@ -52,9 +52,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const double _ConversionRate = 4.87;
-  static final RegExp _FormatRegexp = RegExp(r'^\d+(\.\d*)?$');
+  static const String _ErrorMessage = 'Please use digits and a dot only.';
+  static final RegExp _formatRegexp = RegExp(r'^\d+(\.\d*)?$');
 
   String _currencyString;
+  bool _hasError = false;
   double _currency;
 
   void _updateCurrencyString(String currencyString) {
@@ -68,6 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _currency = double.parse(_currencyString) * _ConversionRate;
     });
+  }
+
+  void _onPressedConvert() {
+    if (_formatRegexp.hasMatch(_currencyString)) {
+      _updateCurrency();
+      _hasError = false;
+    } else {
+      _hasError = true;
+    }
+    print('Has error: ' + _hasError.toString());
   }
 
   @override
@@ -85,17 +97,17 @@ class _MyHomePageState extends State<MyHomePage> {
           TextField(
             keyboardType: const TextInputType.numberWithOptions(signed: true),
             maxLength: 20,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
                 prefixText: 'EUR',
-                contentPadding: EdgeInsets.symmetric(horizontal: 10)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                errorText: _hasError ? _ErrorMessage : null),
             onChanged: _updateCurrencyString,
           ),
           if (_currency != null) Text('$_currency RON'),
           TextButton(
             child: const Text('Convert'),
             onPressed: () {
-              // TODO(cosmin-sterian): if text field valid
-              _updateCurrency();
+              _onPressedConvert();
             },
           ),
         ],
