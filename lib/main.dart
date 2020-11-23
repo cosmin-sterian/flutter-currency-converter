@@ -66,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[
-          Image.network(
-              'https://www.romaniajournal.ro/wp-content/uploads/2016/01/bani1.jpg'),
+          Image.asset('images/bani1.jpg'),
           Container(
             margin: const EdgeInsets.all(10),
             child: TextField(
