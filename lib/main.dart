@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       _hasError = true;
     }
-    print('Has error: ' + _hasError.toString());
+    print('Has error: $_hasError');
   }
 
   @override
