@@ -48,13 +48,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onPressedConvert() {
-    if (_formatRegexp.hasMatch(_inputValue)) {
-      _updateCurrency();
-      _hasError = false;
-    } else {
-      _hasError = true;
-    }
+    setState(() {
+      _hasError = !_formatRegexp.hasMatch(_inputValue);
+    });
     print('Has error: $_hasError');
+
+    if (!_hasError) {
+      _updateCurrency();
+    }
   }
 
   @override
@@ -67,21 +68,26 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Image.network(
               'https://www.romaniajournal.ro/wp-content/uploads/2016/01/bani1.jpg'),
-          TextField(
-            keyboardType: const TextInputType.numberWithOptions(signed: true),
-            maxLength: 20,
-            decoration: InputDecoration(
-                prefixText: 'EUR',
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                errorText: _hasError ? _ErrorMessage : null),
-            onChanged: _updateInputValue,
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: TextField(
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
+              maxLength: 20,
+              decoration: InputDecoration(
+                  prefixText: 'EUR ',
+                  errorText: _hasError ? _ErrorMessage : null),
+              onChanged: _updateInputValue,
+            ),
           ),
-          if (_currency != null) Text('$_currency RON'),
-          TextButton(
-            child: const Text('Convert'),
-            onPressed: () {
-              _onPressedConvert();
-            },
+          Text(_currency == null ? '' : '$_currency RON'),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ElevatedButton(
+              child: const Text('Convert'),
+              onPressed: () {
+                _onPressedConvert();
+              },
+            ),
           ),
         ],
       ),
